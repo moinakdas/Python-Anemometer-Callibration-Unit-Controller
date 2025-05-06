@@ -7,7 +7,7 @@ pause(0.75);
 fprintf("Gate motor initialization SUCCESS\n");
 drawnow;
 pause(0.25);
-fprintf("Interface initialization SUCCESS\n");
+fprintf("Interface initialization FAILED\n");
 drawnow;
 pause(0.35);
 fprintf("Yaw motor disengagement SUCCESS\n");

@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Comforter+Brush&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Saira+Semi+Condensed:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="/eel.js"></script>
+  <script src="effects.js"></script>
 </head>
 <body>
 
@@ -17,8 +19,27 @@
 
   <!-- Blurred Overlay (put this after the navbar in visual layers) -->
   <div class="overlay">
-    <div class="message-box">
-      Searching for Device...
+    <div class="message-box" id = "pitch-status">
+      <div class="message-initial">Searching...</div>
+      <div class="message-final">
+        <span class="left-label" >Pitch Motor</span>
+        <span class="right-label">Not Connected</span>
+      </div>
+    </div>
+    
+    <div class="status-box" id = "yaw-status">
+      <span class="left-label">Yaw Motor</span>
+      <span class="right-label">Not Connected</span>
+    </div>
+
+    <div class="status-box" id = "gate-status">
+      <span class="left-label">Gate Motor</span>
+      <span class="right-label">Not Connected</span>
+    </div>
+
+    <div class="status-box" id = "limit-status">
+      <span class="left-label">Limit Switches</span>
+      <span class="right-label">Not Connected</span>
     </div>
   </div>
 
