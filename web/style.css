@@ -281,3 +281,17 @@ body, html {
 .fade-up-out {
   animation: fadeUpOut 0.8s forwards ease;
 }
+
+/* Fade out overlay */
+@keyframes fadeOutOverlay {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.overlay.fade-out {
+  animation: fadeOutOverlay 0.6s ease forwards;
+}

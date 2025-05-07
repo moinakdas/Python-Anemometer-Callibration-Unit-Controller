@@ -122,9 +122,10 @@ window.onload = () => {
       { id: "gate-status", mode: "xy" },
       { id: "limit-status", mode: "xy" },
       { id: "description", mode: "x" },
-      { id: "loader", mode: "" }
+      { id: "loader", mode: "x" }
     ];
   
+    // Animate each element out with staggered delay
     sequence.forEach((item, i) => {
       const el = document.getElementById(item.id) || document.querySelector(`.${item.id}`);
       if (el) {
@@ -139,7 +140,20 @@ window.onload = () => {
         }, i * 200);
       }
     });
+  
+    // Fade out the overlay after all elements begin animating
+    const overlayElement = document.querySelector(".overlay");
+    if (overlayElement) {
+      const totalDelay = sequence.length * 200 + 200; // wait a bit more after last item
+      setTimeout(() => {
+        overlayElement.classList.add("fade-out");
+        setTimeout(() => {
+          overlayElement.style.display = "none";
+        }, 600); // match fadeOutOverlay animation duration
+      }, totalDelay);
+    }
   }
   
+
   
   
