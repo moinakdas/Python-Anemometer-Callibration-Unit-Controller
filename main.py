@@ -6,13 +6,16 @@ import threading
 # Initialize Eel with the 'web' folder
 web_folder = os.path.abspath("web")
 eel.init(web_folder)
+scale = 0.8
+width,height = 1920*scale,1080*scale
+
 
 # Start Eel frontend in fullscreen Chrome app mode
 def launch_eel():
     eel.start(
         "index.html",
         mode='chrome',
-        size=(1440,810),
+        size=(width,height),
         block=True
     )
 
@@ -44,6 +47,17 @@ def match_line_to_failure_id(line):
         return "limit-status"
     return None
 
+def extract_zeroed_component(line):
+    if "Yaw motor zeroed" in line:
+        return "yaw-status"
+    elif "Pitch motor zeroed" in line:
+        return "pitch-status"
+    elif "Gate motor zeroed" in line:
+        return "gate-status"
+    return None
+
+zeroing_order = ["yaw-status", "pitch-status", "gate-status"]
+zeroing_index = 0
 
 # Start MATLAB and stream its output line by line
 process = subprocess.Popen(
@@ -67,6 +81,25 @@ for line in process.stdout:
     failure_id = match_line_to_failure_id(line)
     if failure_id:
         eel.updateStatusFailure(failure_id)
+
+    if "[INIT FAIL]" in line:
+        eel.showInitFailureUI()
+
+    if "[INIT SUCCESS]" in line:
+        eel.showInitSuccessUI()
+
+    zeroed_id = extract_zeroed_component(line)
+    if zeroed_id:
+        eel.markAsZeroed(zeroed_id)
+
+        # Determine next motor in the sequence
+        zeroing_index += 1
+        if zeroing_index < len(zeroing_order):
+            next_id = zeroing_order[zeroing_index]
+            eel.markAsZeroing(next_id)
+    
+    if "[LOCALIZATION SUCCESS]" in line:
+        eel.fadeAllOut()
 
 process.wait()
 print("MATLAB script finished.")

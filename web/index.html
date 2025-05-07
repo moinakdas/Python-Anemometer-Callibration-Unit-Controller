@@ -6,9 +6,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Comforter+Brush&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Saira+Semi+Condensed:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <script type="text/javascript" src="/eel.js"></script>
   <script src="effects.js"></script>
+  <script
+    src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
+    type="module"
+  ></script>
 </head>
 <body>
 
@@ -18,7 +24,10 @@
   </div>
 
   <!-- Blurred Overlay (put this after the navbar in visual layers) -->
+  <img id = "placeholder-img" src = "images/pitchyawImage1.jpg">
+
   <div class="overlay">
+    <div id="init-status" class = "fade-target-1 fade-target-2">Initialization Complete</div>
     <div class="message-box" id = "pitch-status">
       <div class="message-initial">Searching...</div>
       <div class="message-final">
@@ -40,6 +49,37 @@
     <div class="status-box" id = "limit-status">
       <span class="left-label">Limit Switches</span>
       <span class="right-label">Not Connected</span>
+    </div>
+    <div id="description" class = "fade-target-1 fade-target-2">
+      <!--We're setting everything up for you. The program will start automatically.-->
+      One or more of your components failed to initialize, 
+      which could indicate a serious problem with your device. Retry, launch
+      the troubleshooter to diagnose the issue, or continue at your own 
+      risk.
+    </div>
+    <div id="button-cluster" class = "fade-target-1">
+      <div class="button">
+        <img src="images/icons/retry.png" alt="Retry Icon">
+        <span>Retry</span>
+      </div>
+      <div class="button">
+        <img src="images/icons/troubleshooter.png" alt="Troubleshoot Icon">
+        <span>Troubleshoot</span>
+      </div>
+      <div class="button">
+        <img src="images/icons/warning.png" alt="Continue Icon" >
+        <span style="color:#C9B30F;">Continue Anyway</span>
+      </div>
+    </div>
+    <div class="loader fade-target-2">
+      <dotlottie-player
+        src="https://lottie.host/8eed5473-ced2-4ee8-a449-484ad40325d3/OBC7CRIn8H.lottie"
+        background="transparent"
+        speed="1"
+        style="width: 120px; height: 120px; margin: auto;"
+        loop
+        autoplay
+      ></dotlottie-player>
     </div>
   </div>
 
