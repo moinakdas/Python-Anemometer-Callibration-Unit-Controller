@@ -2,13 +2,13 @@ import subprocess
 import eel
 import os
 import threading
+import time
 
 # Initialize Eel with the 'web' folder
 web_folder = os.path.abspath("web")
 eel.init(web_folder)
 scale = 0.8
 width,height = 1920*scale,1080*scale
-
 
 # Start Eel frontend in fullscreen Chrome app mode
 def launch_eel():
@@ -56,7 +56,8 @@ def extract_zeroed_component(line):
         return "gate-status"
     return None
 
-zeroing_order = ["yaw-status", "pitch-status", "gate-status"]
+
+zeroing_order = ["pitch-status", "yaw-status", "gate-status"]
 zeroing_index = 0
 
 # Start MATLAB and stream its output line by line
@@ -67,6 +68,11 @@ process = subprocess.Popen(
     text=True,
     bufsize=1
 )
+
+@eel.expose
+def send_start_command(val):
+    with open("start_flag.txt", "w") as f:
+        f.write(str(val))
 
 for line in process.stdout:
     line = line.strip()
@@ -100,6 +106,8 @@ for line in process.stdout:
     
     if "[LOCALIZATION SUCCESS]" in line:
         eel.fadeAllOut()
+        time.sleep(2)
+        eel.showMainUI()
 
 process.wait()
 print("MATLAB script finished.")

@@ -10,11 +10,11 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <script type="text/javascript" src="/eel.js"></script>
-  <script src="effects.js"></script>
   <script
     src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
     type="module"
   ></script>
+  <script src="effects.js"></script>
 </head>
 <body>
 
@@ -24,9 +24,10 @@
   </div>
 
   <!-- Blurred Overlay (put this after the navbar in visual layers) -->
-  <img id = "placeholder-img" src = "images/pitchyawImage1.jpg">
+  <!-- <img id = "placeholder-img" src = "images/pitchyawImage1.jpg"> -->
+  <div id="three-container" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:0;background-color: aquamarine;"></div>
 
-  <div class="overlay">
+  <div class="overlay"> <!-- -->
     <div id="init-status" class = "fade-target-1 fade-target-2">Initialization Complete</div>
     <div class="message-box" id = "pitch-status">
       <div class="message-initial">Searching...</div>
@@ -83,6 +84,264 @@
     </div>
   </div>
 
+  <img id="graph-preview" class = "fade-up-init"></div>
+  <img id="diagnostic"  class = "fade-up-init"></div>
+  <img id="settings" class = "fade-up-init"></div>
+  <img id="manual"  class = "fade-up-init"></div>
+
+  <div class="configuration-container fade-up-init">
+  <div class="configuration-card">
+    <h2 class="configuration-title">Configuration Set</h2>
+    <div class="configuration-placeholder">
+      <p class="no-config-text">No configuration selected</p>
+    </div>
+    <div class="configuration-details">
+      <div class="detail-row">
+        <span class="detail-label">Estimated Runtime:</span>
+        <span class="detail-value">--:--</span>
+      </div>
+      <div class="detail-row">
+        <span class="detail-label">Length:</span>
+        <span class="detail-value">--</span>
+      </div>
+    </div>
+    <div class="configuration-actions">
+      <button class="action-button">
+        <span class="icon create-icon"></span>
+        Create New Set
+      </button>
+      <button class="action-button">
+        <span class="icon import-icon"></span>
+        Import Set
+      </button>
+      <button class="action-button">
+        <span class="icon edit-icon"></span>
+        Edit Set
+      </button>
+    </div>
+    <button class="start-button" id="start-button">Start</button>
+  </div>
+  </div>
+  <div class="mode-selector">
+    <div class="slider"></div>
+    <div class="mode-option active" data-mode="free-look">Free Look</div>
+    <div class="mode-option" data-mode="pitch-view">Pitch View</div>
+    <div class="mode-option" data-mode="yaw-view">Yaw View</div>
+  </div>
+
   <script src="effects.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.117.1/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.117.1/examples/js/loaders/GLTFLoader.js"></script>
+
+<script>
+  const container = document.getElementById('three-container');
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xffffff);
+
+  const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+  camera.setFocalLength(20);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
+
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+  dirLight.position.set(5, 5, 5);
+  scene.add(ambientLight, dirLight);
+
+  const loader = new THREE.GLTFLoader();
+  loader.load('assets/pitchandyaw_base.glb', function (gltf) {
+    const model = gltf.scene;
+    scene.add(model);
+
+    // Compute bounding box
+    const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+
+    // Center the model
+    model.position.x += (model.position.x - center.x);
+    model.position.y += (model.position.y - center.y);
+    model.position.z += (model.position.z - center.z);
+
+    // Position the camera back enough to see the whole model
+    const maxDim = Math.max(size.x, size.y, size.z);
+    const fov = camera.fov * (Math.PI / 180);
+    const cameraZ = Math.abs(maxDim / 2 / Math.tan(fov / 2));
+    camera.position.set(0, 0, cameraZ * 3);
+    camera.lookAt(0, 0, 0);
+
+    // Optionally adjust near/far planes
+    const minZ = box.min.z;
+    const cameraToFarEdge = (box.max.z - minZ) + cameraZ;
+    camera.near = 0.1;
+    camera.far = cameraToFarEdge * 3;
+    camera.updateProjectionMatrix();
+
+    console.log("Model loaded and centered.");
+
+    // Load a texture
+    const texture = new THREE.TextureLoader().load('assets/metal.png');
+
+    // Create a material using that texture
+    const customMaterial = new THREE.MeshStandardMaterial({
+      map: texture,
+      metalness: 0.5,
+      roughness: 0.5
+    });
+
+  const loader2 = new THREE.GLTFLoader();
+  loader2.load('assets/pitchandyaw_inner.glb', function (gltf) {
+    const innerModel = gltf.scene;
+
+    // Optional: use same material for consistency
+    const texture = new THREE.TextureLoader().load('assets/metal.png');
+    const customMaterial = new THREE.MeshStandardMaterial({
+      map: texture,
+      metalness: 0.5,
+      roughness: 0.5
+    });
+
+    innerModel.traverse((node) => {
+      if (node.isMesh) {
+        node.material = customMaterial;
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+    });
+
+    // 🔧 Set world position — change these to move the model around
+    innerModel.position.set(-6, -1.15, 1.5); // Example: 2 units to the right
+
+    scene.add(innerModel);
+    console.log("Inner model loaded and placed.");
+  }, undefined, function (error) {
+    console.error("Error loading inner model:", error);
+  });
+
+  const loader3 = new THREE.GLTFLoader();
+  loader3.load('assets/pitchandyaw_nozzle.glb', function (gltf) {
+    const nozzleModel = gltf.scene;
+
+    // Load a different texture just for the nozzle
+    const nozzleTexture = new THREE.TextureLoader().load('assets/images.png');
+
+    // Create a unique material for the nozzle
+    const nozzleMaterial = new THREE.MeshStandardMaterial({
+      map: nozzleTexture,
+      metalness: 0.1,
+      roughness: 0.4
+    });
+
+    // Apply the nozzle-specific material to all meshes in that model
+    nozzleModel.traverse((node) => {
+      if (node.isMesh) {
+        node.material = nozzleMaterial;
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+    });
+
+    // 🔧 Set world position — change this as needed
+    nozzleModel.position.set(-6, 2.5, 1.5); // Example: 4 units to the right of origin
+    nozzleModel.rotation.y = Math.PI / 2;
+    scene.add(nozzleModel);
+    console.log("Nozzle model loaded and placed.");
+  }, undefined, function (error) {
+    console.error("Error loading nozzle model:", error);
+  });
+
+    // Apply custom material to all meshes in the model
+    model.traverse((node) => {
+      if (node.isMesh) {
+        node.material = customMaterial;
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+    });
+  }, undefined, function (error) {
+    console.error("Error loading model:", error);
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+
+  // Manual click + drag orbit control
+  let isDragging = false;
+  let previousMousePosition = { x: 0, y: 0 };
+  let yaw = 0;
+  let pitch = 0;
+  const target = new THREE.Vector3(0, 0, 0);
+
+  container.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    previousMousePosition = { x: e.clientX, y: e.clientY };
+  });
+
+  container.addEventListener('mouseup', () => {
+    isDragging = false;
+  });
+
+  container.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    const dx = e.clientX - previousMousePosition.x;
+    const dy = e.clientY - previousMousePosition.y;
+
+    yaw -= dx * 0.005;
+    pitch += dy * 0.005;
+    pitch = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, pitch)); // clamp pitch
+
+    previousMousePosition = { x: e.clientX, y: e.clientY };
+  });
+
+  // Calculate model bounding box
+  const fullBox = new THREE.Box3();
+  scene.traverse((child) => {
+    if (child.isMesh) {
+      fullBox.expandByObject(child);
+    }
+  });
+
+  const center = fullBox.getCenter(new THREE.Vector3());
+  const size = fullBox.getSize(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z);
+
+  // Set distance to frame the object
+  const distance = maxDim * 2;
+
+  // Position camera at a 3/4 angle (above and to the side)
+  camera.position.set(center.x + distance, center.y + distance * 0.6, center.z + distance);
+  camera.lookAt(center);
+  camera.updateProjectionMatrix();
+
+  function updateCameraPosition() {
+    const radius = camera.position.length();
+    camera.position.x = radius * Math.sin(yaw) * Math.cos(pitch);
+    camera.position.y = radius * Math.sin(pitch);
+    camera.position.z = radius * Math.cos(yaw) * Math.cos(pitch);
+    camera.lookAt(target);
+  }
+
+  function animate() {
+    requestAnimationFrame(animate);
+    updateCameraPosition();
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  document.getElementById('start-button').addEventListener('click', () => {
+    eel.send_start_command(1);  // Sends "1" to MATLAB via Python
+  });
+</script>
+
+  
+    
 </body>
 </html>
