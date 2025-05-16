@@ -209,3 +209,40 @@ document.addEventListener('DOMContentLoaded', initModeSelector);
 function getCurrentViewMode() {
   return window.currentViewMode;
 }
+
+document.querySelector('.action-button .create-icon')?.parentElement.addEventListener('click', () => {
+  const spreadsheet = document.getElementById("config-spreadsheet");
+  const placeholderText = document.querySelector(".no-config-text");
+
+  // Hide old message, show table
+  if (spreadsheet && placeholderText) {
+    placeholderText.style.display = "none";
+    spreadsheet.style.display = "block";
+
+    // Optional: Change background to white
+    document.querySelector(".configuration-placeholder").style.backgroundColor = "#ffffff";
+  }
+});
+
+document.querySelector('.action-button .import-icon')?.parentElement.addEventListener('click', () => {
+  const fileInput = document.getElementById('import-file-input');
+  if (fileInput) {
+    fileInput.click();
+  }
+});
+
+document.getElementById('import-file-input')?.addEventListener('change', function () {
+  const file = this.files[0];
+  if (!file) return;
+
+  if (!file.name.endsWith('.csv')) {
+    alert("Please select a .csv file.");
+    return;
+  }
+
+  console.log("Selected CSV file:", file.name);
+
+  // You can send it to Python here if needed:
+  // eel.process_imported_file(file.name);
+});
+

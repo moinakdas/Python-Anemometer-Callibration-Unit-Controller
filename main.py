@@ -62,7 +62,7 @@ zeroing_index = 0
 
 # Start MATLAB and stream its output line by line
 process = subprocess.Popen(
-    ["matlab", "-batch", "run('main.m')"],
+    ["matlab", "-batch", "run('test.m')"],
     stdout=subprocess.PIPE,
     stderr=subprocess.STDOUT,
     text=True,

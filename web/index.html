@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <script type="text/javascript" src="/eel.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.117.1/examples/js/loaders/RGBELoader.js"></script>
   <script
     src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
     type="module"
@@ -94,6 +95,29 @@
     <h2 class="configuration-title">Configuration Set</h2>
     <div class="configuration-placeholder">
       <p class="no-config-text">No configuration selected</p>
+      <div id="config-spreadsheet" style="display: none;">
+        <table class="config-table">
+          <thead>
+            <tr>
+              <th>Pitch</th>
+              <th>Yaw</th>
+              <th>Velocity</th>
+              <th>Temp</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 8 rows -->
+            <tr><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+            <tr><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td><td><input type="number"></td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
     <div class="configuration-details">
       <div class="detail-row">
@@ -131,11 +155,12 @@
 
   <script src="effects.js"></script>
 
+<input type="file" id="import-file-input" accept=".csv,.xls,.xlsx,.mat" style="display: none;">
 <script src="https://cdn.jsdelivr.net/npm/three@0.117.1/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.117.1/examples/js/loaders/GLTFLoader.js"></script>
 
 <script>
-  const container = document.getElementById('three-container');
+    const container = document.getElementById('three-container');
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0xffffff);

@@ -1,10 +1,10 @@
 %add subdirectories & load libraries
-clear all; %#ok<CLALL>
+clear all;
 clc;
 
-addpath("lib");
-addpath("core");
-addpath("wrappers");
+addpath('lib');
+addpath('core');
+addpath('wrappers');
 loadphidget21;
 
 % Pull data from JSON file
@@ -34,34 +34,34 @@ pitchStepMap('max') = -1;
 [interfaceHandle,yawHandle,pitchHandle,gateHandle,interfaceConn,yawConn,pitchConn,gateConn] = init_wrapper(interfaceID,yawID,pitchID,gateID);
 
 if yawConn && pitchConn && gateConn && interfaceConn
-    fprintf("\n[INIT SUCCESS] All components initialized successfully, proceeding to zero motors\n\n")
+    fprintf('\n[INIT SUCCESS] All components initialized successfully, proceeding to zero motors\n\n')
     drawnow;
 else
-    fprintf("[INIT FAIL]")
+    fprintf('[INIT FAIL]')
     drawnow;
 end
 
 try
     %Zero motors
-    % moveRelative(pitchHandle, -20000);
+    % moveRelative(gateHandle, -1000);
     pitchZeroStep = zeroMotor(interfaceHandle, pitchHandle, 2000, -500,1);
-    fprintf("Pitch motor zeroed at %d\n", pitchZeroStep);
+    fprintf('Pitch motor zeroed at %d\n', pitchZeroStep);
     drawnow;
     moveto(pitchHandle, pitchZeroStep - 34000);
     yawZeroStep = zeroMotor(interfaceHandle, yawHandle,2000,-1000,0);
-    fprintf("Yaw motor zeroed at %d\n", yawZeroStep);
+    fprintf('Yaw motor zeroed at %d\n', yawZeroStep);
     drawnow;
-    moveto(yawHandle, yawZeroStep - 48000);
+    moveto(yawHandle, yawZeroStep - 44000);
     gateZeroStep = zeroMotor(interfaceHandle, gateHandle,500,-250,2);
-    fprintf("Gate motor zeroed at %d\n", gateZeroStep);
+    fprintf('Gate motor zeroed at %d\n', gateZeroStep);
     drawnow;
-    moveto(gateHandle, gateZeroStep - 12000);
-    fprintf("\n[LOCALIZATION SUCCESS]\n")
+    moveto(gateHandle, gateZeroStep - 18000);
+    fprintf('\n[LOCALIZATION SUCCESS]\n')
     drawnow;
     % Replace input()
     while true
         if exist('start_flag.txt', 'file')
-            fprintf("Input received!\n");
+            fprintf('Input received!\n');
             break;
         end
         pause(0.5);
@@ -74,7 +74,7 @@ try
         yawTarget   = yawZeroStep   - config_set(i, 2);
         gateTarget  = gateZeroStep  - config_set(i, 3);
     
-        fprintf("\nExecuting Config %d...\n", i);
+        fprintf('\nExecuting Config %d...\n', i);
         moveto(pitchHandle, pitchTarget);
         moveto(yawHandle, yawTarget);
         moveto(gateHandle, gateTarget);
@@ -86,7 +86,7 @@ try
     %Return to zero
     moveto(pitchHandle, pitchZeroStep - 34000);
     moveto(yawHandle, yawZeroStep - 48000);
-    moveto(gateHandle, gateZeroStep - 12000);
+    moveto(gateHandle, gateZeroStep - 18000);
     % Cleanup
     fprintf('\n');
     cleanup_wrapper(yawConn,pitchConn,gateConn,interfaceConn,yawHandle,pitchHandle,gateHandle,interfaceHandle);
