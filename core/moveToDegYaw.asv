@@ -1,0 +1,6 @@
+function [outputArg1,outputArg2] = moveToDegYaw(deg,yawZeroStep)
+    neutralStep = yawZeroStep - 40000; % step when yaw motor is at neutral position
+
+    finalStep = neutralStep + deg * (320000/360);
+    finalStep = clamped = max(min(value, upper), lower);
+end
