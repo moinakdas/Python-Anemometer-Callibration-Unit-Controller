@@ -2,9 +2,9 @@
 
 ![](utils/callibration_unit_poster.jpg)
 
-This repository serves as the GUI for the MATLAB-based Anemometer Calibration Unit Controller, found [here](https://github.com/moinakdas/Anemometer-Calibration-Unit-Controller).
-
 ## Purpose
+
+This repository serves as the GUI for the MATLAB-based Anemometer Calibration Unit Controller, found [here](https://github.com/moinakdas/Anemometer-Calibration-Unit-Controller).
 
 Hot-wire and cold-wire Anemometers are utilized to obtain accurate readings of fluid flow speed and fluid flow angle. The Anemometer Calibration Unit is designed to test these anemometers by subjecting them to a specified fluid flow speed and fluid flow angle. By comparing the parameters produced by the calibration unit to the parameters recorded by the anemometer, it is possible to determine the accuracy of the anemometer (i.e do the anemometer readings match the given conditions?)
 
