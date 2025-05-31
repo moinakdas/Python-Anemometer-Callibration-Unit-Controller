@@ -2,10 +2,11 @@
 
 ![](utils/callibration_unit_poster.jpg)
 
-## Purpose
-
 This repository serves as the GUI for the MATLAB-based Anemometer Calibration Unit Controller, found [here](https://github.com/moinakdas/Anemometer-Calibration-Unit-Controller). If you ONLY want command-line functionality through MATLAB, use [this](https://github.com/moinakdas/Anemometer-Calibration-Unit-Controller) link.
 
+This library serves as the controller application for the Anemometer Calibration Unit developed under Dr. Spencer Zimmerman at Stony Brook University. The unit is designed to direct airflow via a nozzle at a specified pitch angle, yaw angle, and airflow rate, controllable via the GUI. It is designed to work with genuine Phidgets™ stepper motors/controllers, Phidgets™ digital interface, and a DT9834-BNC Data Acquisition Unit.
+
+## Purpose
 Hot-wire and cold-wire Anemometers are utilized to obtain accurate readings of fluid flow speed and fluid flow angle. The Anemometer Calibration Unit is designed to test these anemometers by subjecting them to a specified fluid flow speed and fluid flow angle. By comparing the parameters produced by the calibration unit to the parameters recorded by the anemometer, it is possible to determine the accuracy of the anemometer (i.e do the anemometer readings match the given conditions?)
 
 ## Prerequisites
@@ -110,7 +111,11 @@ Using the GUI, you may
 ![](utils/PACUC_2.png)
 ![](utils/PACUC_5.png)
 
+# Future Work
 
+- Implementation of airflow temperature control via PID control of Peltier Chips.
+- Use a object-oriented approach for cleaner syntax
+- Rewrite this in anything but MATLAB 
 
 
 
