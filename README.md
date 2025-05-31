@@ -115,11 +115,3 @@ Using the GUI, you may
 
 - Implementation of airflow temperature control via PID control of Peltier Chips.
 - Use a object-oriented approach for cleaner syntax
-- Rewrite this in anything but MATLAB 
-
-
-
-
-
-
-
